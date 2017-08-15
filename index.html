@@ -79,7 +79,7 @@
             // get github data
             const GH_ACCOUNT = 'biglotteryfund';
             const GH_REPO = 'blf-alpha';
-            const GH_ISSUES = `https://api.github.com/repos/${GH_ACCOUNT}/${GH_REPO}/issues`;
+            const GH_ISSUES = `https://api.github.com/repos/${GH_ACCOUNT}/${GH_REPO}/issues?per_page=100`;
             const GH_BRANCHES = `https://api.github.com/repos/${GH_ACCOUNT}/${GH_REPO}/branches`;
 
             fetch(GH_ISSUES).then(r => r.json()).then(j => {
