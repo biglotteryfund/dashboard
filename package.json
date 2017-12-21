@@ -1,0 +1,24 @@
+{
+  "name": "dashboard",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon --exec node ./bin/www",
+    "format": "prettier --single-quote --write *.js **/*.js bin/*"
+  },
+  "dependencies": {
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "get-port": "^3.2.0",
+    "jade": "~1.11.0",
+    "lodash": "^4.17.4",
+    "morgan": "~1.9.0",
+    "nunjucks": "^3.0.1",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.1",
+    "prettier": "^1.9.2"
+  }
+}
