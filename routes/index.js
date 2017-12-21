@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const AWS = require('aws-sdk');
 const request = require('request-promise');
-const { partition } = require('lodash');
+const { partition, sortBy } = require('lodash');
 
 AWS.config.update({ region: 'eu-west-1' });
 
@@ -22,11 +22,11 @@ function fetchAppServerStatus(opts) {
 function fetchAppServerStatuses() {
   return Promise.all([
     fetchAppServerStatus({
-      title: 'Test',
+      title: 'test',
       url: process.env.APP_TEST_ENDPOINT
     }),
     fetchAppServerStatus({
-      title: 'Live',
+      title: 'live',
       url: process.env.APP_LIVE_ENDPOINT
     })
   ]);
@@ -36,12 +36,12 @@ function fetchCmsServerStatuses() {
   return elasticbeanstalk
     .describeEnvironments({
       EnvironmentNames: [
-        process.env.CMS_TEST_ENVIRONMENT,
-        process.env.CMS_LIVE_ENVIRONMENT
+        process.env.CMS_LIVE_ENVIRONMENT,
+        process.env.CMS_TEST_ENVIRONMENT
       ]
     })
     .promise()
-    .then(response => response.Environments);
+    .then(response => sortBy(response.Environments, 'EnvironmentName'));
 }
 
 function fetchGitHubStatuses() {
@@ -54,7 +54,7 @@ function fetchGitHubStatuses() {
       url: `https://api.github.com/repos/${GH_ACCOUNT}/${GH_REPO}/issues?per_page=100`,
       json: true,
       headers: {
-        'Authorization': `token ${accessToken}`,
+        Authorization: `token ${accessToken}`,
         'User-Agent': 'Request-Promise'
       }
     }),
@@ -62,7 +62,7 @@ function fetchGitHubStatuses() {
       url: `https://api.github.com/repos/${GH_ACCOUNT}/${GH_REPO}/branches`,
       json: true,
       headers: {
-        'Authorization': `token ${accessToken}`,
+        Authorization: `token ${accessToken}`,
         'User-Agent': 'Request-Promise'
       }
     })

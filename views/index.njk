@@ -15,7 +15,7 @@
       {% for status in appStatuses %}
         <div class="col-sm-6">
           <h3>
-            App {{ status.title }}
+            Web ({{ status.title }})
             <small>
               <a href="{{ status.url }}/status">status</a> |
               <a href="{{ status.url }}/status/pages">pagelist</a>
@@ -30,7 +30,7 @@
       {% for status in cmsStatuses %}
         <div class="col-sm-6">
           <h3>
-            CMS {{ status.EnvironmentName }}
+            CMS ({{ status.EnvironmentName }})
             <small><span class="badge {% if status.Health === 'Green' %}badge-success{% else %}badge-danger{% endif %}">
               {{ status.Health}}
             </span></small>
@@ -41,15 +41,15 @@
     </div>
 
     <div class="row rounded mb-4">
-        <div class="col-sm-6 text-center">
-          <h3>Peformance stats (Legacy)</h3>
-          <div class="bg-light p-4">
+        <div class="col-sm-6">
+          <h3>Peformance (new)</h3>
+          <div class="text-center bg-light p-3">
             <div id="js-perf-new">Loading...</div>
           </div>
         </div>
-        <div class="col-sm-6 text-center">
-          <h3>Peformance stats (New)</h3>
-          <div class="bg-light p-3">
+        <div class="col-sm-6">
+          <h3>Peformance (legacy)</h3>
+          <div class="text-center bg-light p-4">
             <div id="js-perf-legacy">Loading...</div>
           </div>
         </div>
