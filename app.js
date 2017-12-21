@@ -1,15 +1,20 @@
 const express = require('express');
+const dotenv = require('dotenv');
 const path = require('path');
 const logger = require('morgan');
 const nunjucks = require('nunjucks');
 
-const routeIndex = require('./routes/index');
+dotenv.config();
 
 const app = express();
 
+const routeIndex = require('./routes/index');
+
 nunjucks.configure('views', {
+  express: app,
   autoescape: true,
-  express: app
+  noCache: true,
+  watch: true
 });
 app.set('view engine', 'njk');
 

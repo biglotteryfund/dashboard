@@ -7,7 +7,9 @@
     "format": "prettier --single-quote --write *.js **/*.js bin/*"
   },
   "dependencies": {
+    "aws-sdk": "^2.173.0",
     "debug": "~2.6.9",
+    "dotenv": "^4.0.0",
     "express": "~4.15.5",
     "get-port": "^3.2.0",
     "jade": "~1.11.0",

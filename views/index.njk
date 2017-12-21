@@ -1,5 +1,140 @@
 {% extends "layout.njk" %}
 
 {% block content %}
-  <h1>{{ title }}</h1>
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Big Lottery Fund Dashboard</a>
+    <span class="navbar-text">
+      <strong>{{ githubStatuses.issues.length }}</strong> open issues •
+      <strong>{{ githubStatuses.pullRequests.length }}</strong> PRs •
+      <strong>{{ githubStatuses.branches.length }}</strong> branches
+    </span>
+  </header>
+
+  <main class="container mt-2">
+    <div class="row mb-2">
+      {% for status in appStatuses %}
+        <div class="col-sm-6">
+          <h3>
+            App {{ status.title }}
+            <small>
+              <a href="{{ status.url }}/status">status</a> |
+              <a href="{{ status.url }}/status/pages">pagelist</a>
+            </small>
+          </h3>
+          <pre class="pre-scrollable bg-light p-1">{{ status.response | dump(2) }}</pre>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="row mb-2">
+      {% for status in cmsStatuses %}
+        <div class="col-sm-6">
+          <h3>
+            CMS {{ status.EnvironmentName }}
+            <small><span class="badge {% if status.Health === 'Green' %}badge-success{% else %}badge-danger{% endif %}">
+              {{ status.Health}}
+            </span></small>
+          </h3>
+          <pre class="pre-scrollable bg-light p-1">{{ status | dump(2) }}</pre>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="row rounded mb-4">
+        <div class="col-sm-6 text-center">
+          <h3>Peformance stats (Legacy)</h3>
+          <div class="bg-light p-4">
+            <div id="js-perf-new">Loading...</div>
+          </div>
+        </div>
+        <div class="col-sm-6 text-center">
+          <h3>Peformance stats (New)</h3>
+          <div class="bg-light p-3">
+            <div id="js-perf-legacy">Loading...</div>
+          </div>
+        </div>
+    </div>
+  </main>
+
+  <script>
+    const pagespeedKey = "{{ pagespeedKey }}";
+    const pagespeedApiUrl =
+      'https://www.googleapis.com/pagespeedonline/v2/runPagespeed?';
+    let pagespeedTests = [
+      {
+        url: 'https://www.biglotteryfund.org.uk/funding/programmes',
+        title: 'New site',
+        elm: document.getElementById('js-perf-new')
+      },
+      {
+        url: 'https://www.biglotteryfund.org.uk/funding/funding-finder',
+        title: 'Legacy site',
+        elm: document.getElementById('js-perf-legacy')
+      }
+    ];
+
+    function formatBytes(a, b) {
+      if (0 == a) {
+        return '0 Bytes';
+      }
+      let c = 1e3,
+        d = b || 2,
+        e = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+        f = Math.floor(Math.log(a) / Math.log(c));
+      return parseFloat((a / Math.pow(c, f)).toFixed(d)) + ' ' + e[f];
+    }
+
+    // via https://stackoverflow.com/a/17268489
+    function getColor(value) {
+      //value from 0 to 1
+      let hue = ((1 - value) * 120).toString(10);
+      return ['hsl(', hue, ',100%,50%)'].join('');
+    }
+
+    let makePerfStats = (test, data) => {
+      let s = data.pageStats;
+      let bytes = [
+        s.htmlResponseBytes,
+        s.textResponseBytes,
+        s.cssResponseBytes,
+        s.imageResponseBytes,
+        s.javascriptResponseBytes,
+        s.flashResponseBytes,
+        s.otherResponseBytes
+      ];
+      bytes = bytes.map(b => parseInt(b) || 0);
+      let totalBytes = bytes.reduce((a, b) => a + b, 0);
+
+      let hex = getColor(parseInt(data.ruleGroups.SPEED.score) / 100);
+      test.elm.style.borderTopColor = hex;
+
+      let str = '';
+      str += '<div class="row"><div class="col-sm-4 text-center">';
+      str += `<h4>${
+        data.ruleGroups.SPEED.score
+      } / 100</h4> pagespeed score`;
+      str += '</div><div class="col-sm-4 text-center">';
+      str += `<h4>${
+        data.pageStats.numberResources
+      }</h4> Resources`;
+      str += '</div><div class="col-sm-4 text-center">';
+      str += `<h4>${formatBytes(
+        totalBytes
+      )}</h4> Page weight`;
+      str += '</div></div>';
+      return str;
+    };
+
+    pagespeedTests.forEach(test => {
+      // get pagespeed data
+      let query = ['url=' + test.url, 'key=' + pagespeedKey].join('&');
+      let url = pagespeedApiUrl + query;
+      fetch(url)
+        .then(r => r.json())
+        .then(j => {
+          let html = makePerfStats(test, j);
+          test.elm.innerHTML = html;
+        });
+    });
+  </script>
 {% endblock %}
