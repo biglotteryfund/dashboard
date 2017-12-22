@@ -1,11 +1,8 @@
 # Big Lottery Fund Dashboard
 
-Dasboard app for displaying:
+<img width="1438" alt="screen shot 2017-12-21 at 16 48 26" src="https://user-images.githubusercontent.com/123386/34265778-dd4e564e-e66e-11e7-810b-bf758bc21646.png">
 
-- Github status
-- App server statuses
-- CMS server statuses
-- Performance metrics
+Dashboard app for displaying: Github status, app server statuses, CMS server statuses, and performance metrics.
 
 ## Getting Started
 
