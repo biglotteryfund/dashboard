@@ -35,8 +35,15 @@
               {{ status.Health}}
             </span></small>
           </h3>
-          <pre class="pre-scrollable bg-light p-1">{{ status | dump(2) }}</pre>
+          <pre class="pre-scrollable bg-light p-1">{
+  "EnvironmentName": "{{ status.EnvironmentName }}",
+  "Status": "{{ status.Status }}",
+  "DateUpdated": {{ moment(status.DateUpdated).format('dddd, MMMM Do YYYY, h:mm:ss a') }},
+  "LastDeployed": {{ moment(status.DateUpdated).fromNow() }},
+  "VersionLabel": "{{ status.VersionLabel }}"
+}</pre>
         </div>
+
       {% endfor %}
     </div>
 
