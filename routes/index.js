@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const AWS = require('aws-sdk');
+const moment = require('moment');
 const request = require('request-promise');
 const { partition, sortBy } = require('lodash');
 
@@ -93,7 +94,8 @@ router.get('/', function(req, res, next) {
       appStatuses,
       cmsStatuses,
       githubStatuses,
-      pagespeedKey
+      pagespeedKey,
+      moment
     });
   });
 });
