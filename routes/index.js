@@ -37,12 +37,24 @@ function fetchCmsServerStatuses() {
   return elasticbeanstalk
     .describeEnvironments({
       EnvironmentNames: [
-        process.env.CMS_LIVE_ENVIRONMENT,
-        process.env.CMS_TEST_ENVIRONMENT
+        process.env.CMS_TEST_ENVIRONMENT,
+        process.env.CMS_LIVE_ENVIRONMENT
       ]
     })
     .promise()
-    .then(response => sortBy(response.Environments, 'EnvironmentName'));
+    .then(response => response.Environments)
+    .then(environments => {
+      return environments.map(environment => {
+        return {
+          Health: environment.Health,
+          EnvironmentName: environment.EnvironmentName,
+          Status: environment.Status,
+          DateUpdated: moment(environment.DateUpdated).format('dddd, MMMM Do YYYY, h:mm:ss a'),
+          LastDeployed: moment(environment.DateUpdated).fromNow(),
+          VersionLabel: environment.VersionLabel
+        }
+      })
+    });
 }
 
 function fetchGitHubStatuses() {
@@ -82,7 +94,7 @@ function fetchGitHubStatuses() {
   });
 }
 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   Promise.all([
     fetchAppServerStatuses(),
     fetchCmsServerStatuses(),
@@ -94,8 +106,7 @@ router.get('/', function(req, res, next) {
       appStatuses,
       cmsStatuses,
       githubStatuses,
-      pagespeedKey,
-      moment
+      pagespeedKey
     });
   });
 });
