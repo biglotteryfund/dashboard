@@ -8,7 +8,7 @@
       elm: document.getElementById('js-perf-new')
     },
     {
-      url: 'https://www.biglotteryfund.org.uk/research',
+      url: 'https://www.biglotteryfund.org.uk/funding/search-past-grants',
       title: 'Legacy site',
       elm: document.getElementById('js-perf-legacy')
     }
