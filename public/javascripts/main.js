@@ -15,7 +15,7 @@
   ];
 
   function formatBytes(a, b) {
-    if (0 == a) {
+    if (0 === a) {
       return '0 Bytes';
     }
     let c = 1e3,
@@ -46,8 +46,7 @@
     bytes = bytes.map(b => parseInt(b) || 0);
     let totalBytes = bytes.reduce((a, b) => a + b, 0);
 
-    let hex = getColor(parseInt(data.ruleGroups.SPEED.score) / 100);
-    test.elm.style.borderTopColor = hex;
+    test.elm.style.borderTopColor = getColor(parseInt(data.ruleGroups.SPEED.score) / 100);
 
     let str = '';
     str += '<div class="row"><div class="col-sm-4 text-center">';
@@ -75,8 +74,7 @@
         fetch(url)
           .then(r => r.json())
           .then(j => {
-            let html = makePerfStats(test, j);
-            test.elm.innerHTML = html;
+            test.elm.innerHTML = makePerfStats(test, j);
           });
       });
     }
