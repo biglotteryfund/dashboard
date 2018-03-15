@@ -3,38 +3,47 @@
 {% block content %}
   <header class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">Big Lottery Fund Dashboard</a>
-    <span class="navbar-text">
-      <strong>{{ githubStatuses.issues.length }}</strong> open issues •
-      <strong>{{ githubStatuses.pullRequests.length }}</strong> PRs •
-      <strong>{{ githubStatuses.branches.length }}</strong> branches
-    </span>
+    <div class="navbar-text">
+      <a href="{{ githubStatuses.links.issues }}">
+        <strong>{{ githubStatuses.issues.length }}</strong> open issues
+      </a> •
+      <a href="{{ githubStatuses.links.pullRequests }}">
+        <strong>{{ githubStatuses.pullRequests.length }}</strong> PR{% if githubStatuses.pullRequests.length > 1 or githubStatuses.pullRequests.length === 0 %}s{% endif %}
+      </a> •
+      <a href="{{ githubStatuses.links.branches }}">
+        <strong>{{ githubStatuses.branches.length }}</strong> branch{% if githubStatuses.branches.length > 1 or githubStatuses.branches.length === 0 %}es{% endif %}
+      </a>
+    </div>
   </header>
 
   <main class="container mt-2">
+    <h2 class="mb-3">Website</h2>
     <div class="row mb-2">
       {% for status in appStatuses %}
         <div class="col-sm-6">
-          <h3>
-            Web ({{ status.title }})
+          <h5>
+            {{ status.title | capitalize }}
             <small>
               <a href="{{ status.url }}/status">status</a> |
               <a href="{{ status.url }}/status/pages">pagelist</a>
             </small>
-          </h3>
+          </h5>
           <pre class="pre-scrollable bg-light p-1">{{ status.response | dump(2) }}</pre>
         </div>
       {% endfor %}
     </div>
 
+    <h2 class="mb-3">CMS</h2>
     <div class="row mb-2">
+      {% set colSpan = 12 / cmsStatuses.length | round %}
       {% for status in cmsStatuses %}
-        <div class="col-sm-6">
-          <h3>
-            CMS ({{ status.EnvironmentName }})
+        <div class="col-sm-{{ colSpan }}">
+          <h5>
+            {{ status.EnvironmentName }}
             <small><span class="badge {% if status.Health === 'Green' %}badge-success{% else %}badge-danger{% endif %}">
               {{ status.Health}}
             </span></small>
-          </h3>
+          </h5>
           <pre class="pre-scrollable bg-light p-1">{
   "EnvironmentName": "{{ status.EnvironmentName }}",
   "Status": "{{ status.Status }}",
@@ -47,15 +56,16 @@
       {% endfor %}
     </div>
 
+    <h2 class="mb-3">Site performance</h2>
     <div class="row rounded mb-4">
         <div class="col-sm-6">
-          <h3>Peformance (new)</h3>
+          <h5>New website</h5>
           <div class="text-center bg-light p-3">
             <div id="js-perf-new">Loading...</div>
           </div>
         </div>
         <div class="col-sm-6">
-          <h3>Peformance (legacy)</h3>
+          <h5>Legacy website</h5>
           <div class="text-center bg-light p-4">
             <div id="js-perf-legacy">Loading...</div>
           </div>
@@ -81,7 +91,7 @@
     ];
 
     function formatBytes(a, b) {
-      if (0 == a) {
+      if (0 === a) {
         return '0 Bytes';
       }
       let c = 1e3,
@@ -139,8 +149,7 @@
       fetch(url)
         .then(r => r.json())
         .then(j => {
-          let html = makePerfStats(test, j);
-          test.elm.innerHTML = html;
+          test.elm.innerHTML = makePerfStats(test, j);
         });
     });
   </script>
