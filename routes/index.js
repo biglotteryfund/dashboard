@@ -52,7 +52,7 @@ function fetchGitHubStatuses() {
       url: `https://api.github.com/repos/${GH_ACCOUNT}/${GH_REPO}/issues?per_page=100`,
       json: true,
       headers: {
-        'Authorization': `token ${accessToken}`,
+        Authorization: `token ${accessToken}`,
         'User-Agent': 'Request-Promise'
       }
     }),
@@ -60,7 +60,7 @@ function fetchGitHubStatuses() {
       url: `https://api.github.com/repos/${GH_ACCOUNT}/${GH_REPO}/branches`,
       json: true,
       headers: {
-        'Authorization': `token ${accessToken}`,
+        Authorization: `token ${accessToken}`,
         'User-Agent': 'Request-Promise'
       }
     })
@@ -84,7 +84,7 @@ function fetchGitHubStatuses() {
   });
 }
 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   Promise.all([
     fetchAppServerStatuses(),
     fetchCmsServerStatuses(),

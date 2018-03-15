@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const app = require('../app');
-const debug = require('debug')('dashboard:server');
 const http = require('http');
 const getPort = require('get-port');
 
@@ -39,6 +38,6 @@ const port = getPort({
     const addr = server.address();
     const bind =
       typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-    debug('Listening on ' + bind);
+    console.log(`\nServer listening on ${bind}\n`);
   });
 });

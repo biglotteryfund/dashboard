@@ -19,7 +19,8 @@ nunjucks.configure('views', {
 app.set('view engine', 'njk');
 
 app.use(logger('dev'));
-app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use('/', routeIndex);
 
