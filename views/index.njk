@@ -1,5 +1,27 @@
 {% extends "layout.njk" %}
 
+{% macro elasticBeanstalkStatus(appStatuses) %}
+  {% set colSpan = 12 / appStatuses.length | round %}
+  {% for status in appStatuses %}
+    <div class="col-sm-{{ colSpan }}">
+      <h5>
+        {{ status.EnvironmentName }}
+        <small><span class="badge {% if status.Health === 'Green' %}badge-success{% else %}badge-danger{% endif %}">
+              {{ status.Health}}
+            </span></small>
+      </h5>
+      <pre class="pre-scrollable bg-light p-1">{
+  "EnvironmentName": "{{ status.EnvironmentName }}",
+  "Status": "{{ status.Status }}",
+  "DateUpdated": {{ moment(status.DateUpdated).format('dddd, MMMM Do YYYY, h:mm:ss a') }},
+  "LastDeployed": {{ moment(status.DateUpdated).fromNow() }},
+  "VersionLabel": "{{ status.VersionLabel }}"
+}</pre>
+    </div>
+
+  {% endfor %}
+{% endmacro %}
+
 {% block content %}
   <header class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">Big Lottery Fund Dashboard</a>
@@ -35,25 +57,12 @@
 
     <h2 class="mb-3">CMS</h2>
     <div class="row mb-2">
-      {% set colSpan = 12 / cmsStatuses.length | round %}
-      {% for status in cmsStatuses %}
-        <div class="col-sm-{{ colSpan }}">
-          <h5>
-            {{ status.EnvironmentName }}
-            <small><span class="badge {% if status.Health === 'Green' %}badge-success{% else %}badge-danger{% endif %}">
-              {{ status.Health}}
-            </span></small>
-          </h5>
-          <pre class="pre-scrollable bg-light p-1">{
-  "EnvironmentName": "{{ status.EnvironmentName }}",
-  "Status": "{{ status.Status }}",
-  "DateUpdated": {{ moment(status.DateUpdated).format('dddd, MMMM Do YYYY, h:mm:ss a') }},
-  "LastDeployed": {{ moment(status.DateUpdated).fromNow() }},
-  "VersionLabel": "{{ status.VersionLabel }}"
-}</pre>
-        </div>
+      {{ elasticBeanstalkStatus(cmsStatuses) }}
+    </div>
 
-      {% endfor %}
+    <h2 class="mb-3">Applications Service</h2>
+    <div class="row mb-2">
+      {{ elasticBeanstalkStatus(applicationStatuses) }}
     </div>
 
     <h2 class="mb-3">Site performance</h2>

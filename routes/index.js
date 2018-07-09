@@ -7,7 +7,10 @@ const { partition, sortBy } = require('lodash');
 
 AWS.config.update({ region: 'eu-west-1' });
 
-const elasticbeanstalk = new AWS.ElasticBeanstalk();
+const elasticbeanstalkIreland = new AWS.ElasticBeanstalk();
+const elasticbeanstalkEngland = new AWS.ElasticBeanstalk({
+  region: 'eu-west-2'
+});
 
 function fetchAppServerStatus(opts) {
   return request({
@@ -34,9 +37,18 @@ function fetchAppServerStatuses() {
 }
 
 function fetchCmsServerStatuses() {
-  return elasticbeanstalk
+  return elasticbeanstalkIreland
     .describeEnvironments({
       ApplicationName: process.env.CMS_APP_NAME
+    })
+    .promise()
+    .then(response => sortBy(response.Environments, 'DateCreated'));
+}
+
+function fetchApplicationServerStatuses() {
+  return elasticbeanstalkEngland
+    .describeEnvironments({
+      ApplicationName: process.env.APPLICATION_APP_NAME
     })
     .promise()
     .then(response => sortBy(response.Environments, 'DateCreated'));
@@ -88,13 +100,15 @@ router.get('/', function (req, res, next) {
   Promise.all([
     fetchAppServerStatuses(),
     fetchCmsServerStatuses(),
+    fetchApplicationServerStatuses(),
     fetchGitHubStatuses()
   ]).then(results => {
-    const [appStatuses, cmsStatuses, githubStatuses] = results;
+    const [appStatuses, cmsStatuses, applicationStatuses, githubStatuses] = results;
     const pagespeedKey = process.env.PAGESPEED_API_KEY;
     res.render('index', {
       appStatuses,
       cmsStatuses,
+      applicationStatuses,
       githubStatuses,
       pagespeedKey,
       moment

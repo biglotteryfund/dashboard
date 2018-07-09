@@ -18,8 +18,10 @@ Create a `.env` file with the following values
 // ELB endpoints
 APP_TEST_ENDPOINT=
 APP_LIVE_ENDPOINT=
-// ElasticBeanstalk app name
+// ElasticBeanstalk CMS app name
 CMS_APP_NAME=
+// ElasticBeanstalk Applications service app name
+APPLICATION_APP_NAME=
 // Github access token to avoid rate-limiting, basic access only
 GITHUB_ACCESS_TOKEN=
 // Google pagespeed API key
