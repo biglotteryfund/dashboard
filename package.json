@@ -5,7 +5,9 @@
   "scripts": {
     "start": "nodemon --exec node ./bin/www",
     "format": "prettier --single-quote --write *.js **/*.js bin/*",
-    "test": "snyk test"
+    "test": "snyk test",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "dependencies": {
     "aws-sdk": "^2.178.0",
@@ -17,12 +19,13 @@
     "moment": "^2.20.1",
     "morgan": "~1.9.0",
     "nunjucks": "^3.1.3",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "request": "^2.84.0",
+    "request-promise": "^4.2.2",
+    "snyk": "^1.88.2"
   },
   "devDependencies": {
     "nodemon": "^1.14.1",
-    "prettier": "^1.9.2",
-    "snyk": "^1.36.2"
-  }
+    "prettier": "^1.9.2"
+  },
+  "snyk": true
 }
