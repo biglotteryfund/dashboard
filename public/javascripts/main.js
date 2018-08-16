@@ -3,7 +3,7 @@
     'https://www.googleapis.com/pagespeedonline/v2/runPagespeed?';
   let pagespeedTests = [
     {
-      url: 'https://www.biglotteryfund.org.uk/funding/programmes',
+      url: 'https://www.biglotteryfund.org.uk',
       title: 'New site',
       elm: document.getElementById('js-perf-new')
     },

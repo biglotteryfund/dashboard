@@ -5,12 +5,9 @@ const moment = require('moment');
 const request = require('request-promise');
 const { partition, sortBy } = require('lodash');
 
-AWS.config.update({ region: 'eu-west-1' });
+AWS.config.update({ region: 'eu-west-2' });
 
-const elasticbeanstalkIreland = new AWS.ElasticBeanstalk();
-const elasticbeanstalkEngland = new AWS.ElasticBeanstalk({
-  region: 'eu-west-2'
-});
+const elasticbeanstalk = new AWS.ElasticBeanstalk();
 
 function fetchAppServerStatus(opts) {
   return request({
@@ -37,7 +34,7 @@ function fetchAppServerStatuses() {
 }
 
 function fetchCmsServerStatuses() {
-  return elasticbeanstalkIreland
+  return elasticbeanstalk
     .describeEnvironments({
       ApplicationName: process.env.CMS_APP_NAME
     })
@@ -46,7 +43,7 @@ function fetchCmsServerStatuses() {
 }
 
 function fetchApplicationServerStatuses() {
-  return elasticbeanstalkEngland
+  return elasticbeanstalk
     .describeEnvironments({
       ApplicationName: process.env.APPLICATION_APP_NAME
     })
