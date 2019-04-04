@@ -6,11 +6,6 @@
       url: 'https://www.biglotteryfund.org.uk',
       title: 'New site',
       elm: document.getElementById('js-perf-new')
-    },
-    {
-      url: 'http://31.221.8.237',
-      title: 'Legacy site',
-      elm: document.getElementById('js-perf-legacy')
     }
   ];
 
